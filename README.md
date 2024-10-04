@@ -20,5 +20,6 @@
 
 ## Installation ⚙️
 
-Download the latest version of `wallpaper.exe` from the [releases page]([https://github.com/yourusername/wallpaper-manager/releases](https://drive.google.com/file/d/1SD7tbwX23xGrfkDOQ5G7isEP4upe--B8/view?usp=sharing)).
+Download the latest version of `wallpaper.exe` from the [releases page](https://drive.google.com/file/d/1SD7tbwX23xGrfkDOQ5G7isEP4upe--B8/view?usp=sharing).
+
 ---
