@@ -26,6 +26,6 @@ Download the latest version of `wallpaper.exe` from the [releases page](https://
 
 ## Demo 📹
 
-[![Watch the video](https://img.youtube.com/vi/your-video-id/0.jpg)]
+[![Watch the video](https://raw.githubusercontent.com/SUBACITO/Wallpepper/refs/heads/main/Demo/gif)]
 
 Click the image above to watch the demo.
