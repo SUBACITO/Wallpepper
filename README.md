@@ -1,4 +1,4 @@
-# Wallpaper Manager 🎨
+# Wallpepper 🎨
 
 ![GitHub stars](https://img.shields.io/github/stars/yourusername/wallpaper-manager)
 ![GitHub forks](https://img.shields.io/github/forks/yourusername/wallpaper-manager)
