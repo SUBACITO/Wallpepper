@@ -22,5 +22,10 @@
 
 Download the latest version of `wallpaper.exe` from the [releases page](https://drive.google.com/uc?export=download&id=1SD7tbwX23xGrfkDOQ5G7isEP4upe--B8).
 
-
 ---
+
+## Demo 📹
+
+[![Watch the video](https://img.youtube.com/vi/your-video-id/0.jpg)]
+
+Click the image above to watch the demo.
