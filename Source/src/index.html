@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Wallpaper Video</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            /* Prevent scrolling */
+        }
+
+        .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Make the video cover the entire screen */
+            pointer-events: none;
+            /* Disable mouse events for the video */
+        }
+    </style>
+</head>
+
+<body>
+    <video id="background-video" autoplay muted loop class="background-video">
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+        const videoElement = document.getElementById('background-video');
+        const savedVolume = localStorage.getItem('volumeSetting');
+
+        const storedVideoUrl = localStorage.getItem('videoUrl');
+
+        if (storedVideoUrl) {
+            videoElement.src = storedVideoUrl;
+            videoElement.play();
+        }
+
+        ipcRenderer.on('selected-video', (event, videoPath) => {
+            videoElement.src = videoPath; // Set the video source to the selected file
+            videoElement.play(); // Play the video
+
+            // Save video URL to localStorage
+            localStorage.setItem('videoUrl', videoPath);
+        });
+
+        // Load volume from localStorage
+        
+        if (savedVolume !== null) {
+            videoElement.volume = savedVolume; // Set video volume
+        }
+
+
+        // Function to check if the window is fullscreen
+        function checkIfWindowIsFullScreen() {
+            const isFullScreen = ipcRenderer.sendSync('request-fullscreen-status'); // Request fullscreen status
+            // console.log(`Is Current Window Full Screen: ${isFullScreen}`);
+
+            if (isFullScreen) {
+                videoElement.pause(); // Pause video if any window is fullscreen
+            } else {
+                videoElement.play(); // Play video if no window is fullscreen
+            }
+        }
+
+        // Check the checkbox state from localStorage
+        const isFullscreenEnabled = localStorage.getItem('fullscreenApplication') === 'true';
+
+        const isSoundEnabled = localStorage.getItem('soundWallpepper') === 'true';
+
+        // check Sound Wallpepper is available
+        // Check if sound wallpaper is available
+        if (isSoundEnabled) {
+            videoElement.muted = false;
+        } else {
+            videoElement.muted = true; // Ensure the video is muted if sound is disabled
+        }
+
+
+        // You can call this function wherever necessary, for example:
+        setInterval(() => {
+            if (isFullscreenEnabled) {
+                checkIfWindowIsFullScreen(); // Check the fullscreen status periodically
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+{
+  "name": "wallpepper",
+  "version": "1.0.0",
+  "author": {
+    "name": "SUBACITO",
+    "email": "subacitodev@gmail.com",
+    "url": "www.asdasdasd.com"
+  },
+  "description": "set your electron window as wallpaper behind desktop icons",
+  "keywords": [
+    "electron",
+    "wallpaper"
+  ],
+  "main": "main.js",
+  "files": [
+    "dist",
+    "build"
+  ],
+  "scripts": {
+    "watch": "tsc --watch",
+    "configure": "node-gyp configure",
+    "build": "node-gyp build",
+    "clean": "node-gyp clean",
+    "install": "node-gyp rebuild",
+    "start": "electron ./main.js",
+    "export": "electron-packager . Wallpepper --asar --overwrite --icon=src/assets/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CreeperStudio --version-string.FileDescription=CE --ignore=video",
+    "minify": "terser main.js"
+  },
+  "gypfile": true,
+  "license": "ISC",
+  "directories": {
+    "lib": "lib"
+  },
+  "extraResources": [
+    {
+      "from": "video/",
+      "to": "video/"
+    }
+  ],
+  "dependencies": {
+    "auto-launch": "^5.0.6",
+    "bindings": "^1.5.0",
+    "electron": "^32.1.2",
+    "electron-as-wallpaper": "^1.0.8",
+    "electron-auto-launch": "^5.0.7",
+    "electron-packager": "^17.1.2",
+    "node-addon-api": "^8.1.0",
+    "node-window-manager": "^2.2.4",
+    "robotjs": "^0.6.0",
+    "typescript": "^5.6.2"
+  }
+}

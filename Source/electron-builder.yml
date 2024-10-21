@@ -1,0 +1,11 @@
+appId: com.example.wallpepper
+productName: Wallpepper
+copyright: Copyright 2024 Wallpepper
+build:
+  appId: com.example.wallpepper
+  win32:
+    target: nsis
+  mac:
+    target: dmg
+  linux:
+    target: deb

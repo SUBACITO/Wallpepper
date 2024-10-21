@@ -1,0 +1,17 @@
+directories:
+  output: release
+  buildResources: resources
+appId: Wallpepper
+win:
+  target:
+    - nsis
+    - msi
+files:
+  - filter:
+      - dist/**.*
+nsis:
+  uninstallDisplayName: Uninstall this app
+  license: license.txt
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+electronVersion: 32.1.2

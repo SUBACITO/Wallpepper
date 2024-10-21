@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallpepper Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1E1E1E;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #333;
+            font-size: 24px;
+        }
+
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .video-item {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: #2B2B2B;
+            color: white;
+            padding: 20px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.show {
+            transform: translateX(0);
+        }
+
+        .sidebar h2 {
+            /* margin-top: 0; */
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .toggle-button {
+            background-color: #555;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+            padding-left: 30px;
+            color: white;
+        }
+
+        /* Hide the default checkbox */
+        .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Create a custom checkbox */
+        .checkmark {
+            position: absolute;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #555;
+            border-radius: 4px;
+        }
+
+        /* On mouse-over, add a grey background color */
+        .checkbox-container:hover input~.checkmark {
+            background-color: #777;
+        }
+
+        /* When the checkbox is checked, add a blue background */
+        .checkbox-container input:checked~.checkmark {
+            background-color: #2196F3;
+        }
+
+        /* Create the checkmark (hidden when not checked) */
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the checkmark when checked */
+        .checkbox-container input:checked~.checkmark:after {
+            display: block;
+        }
+
+        /* Style the checkmark/indicator */
+        .checkbox-container .checkmark:after {
+            left: 7px;
+            top: 3px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        #gallery-drag {
+            border: 2px dashed #333;
+            transition: border-color 0.3s ease;
+            min-width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        /* Add visual feedback for drag-and-drop */
+        #gallery-drag.dragover {
+            border-color: #2196F3;
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        .detail-options {
+            font-size: 13px;
+            padding: 10px;
+        }
+
+        .option-item {
+            padding: 20px;
+        }
+
+        i {
+            padding: 5px;
+        }
+
+        /* Add slider styling */
+        #volumeSlider {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button class="toggle-button" onclick="closeWindow()"><i class="fa-regular fa-eye-slash"></i></i></button>
+        <button class="toggle-button" onclick="toggleSidebar()"><i class="fa-solid fa-gear"></i></button>
+    </div>
+
+    <div id="gallery"></div>
+
+    <div id="sidebar" class="sidebar">
+        <button class="close-button" onclick="toggleSidebar()"><i class="fa-solid fa-minus"></i></button>
+        <h2>Perfomance</h2>
+        <!-- Add your settings options here -->
+        <div class="option-item">
+            <label class="checkbox-container">
+                <i class="fa-solid fa-cat"></i>
+                <input type="checkbox" id="iconHider">
+                <span class="checkmark"></span>
+                Fullscreen Application
+            </label>
+            <span class="detail-options">Reboot after change setting</span>
+        </div>
+
+        <div class="option-item">
+            <label class="checkbox-container">
+                <i class="fa-solid fa-music"></i>
+                <input type="checkbox" id="soundWallpepper">
+                <span class="checkmark"></span>
+                Sound Wallpepper
+            </label>
+            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.1" value="1">
+            <span class="detail-options">Reboot after change setting</span>
+        </div>
+        
+        <!-- <div>
+            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.1" value="1">
+        </div> -->
+
+        <h2>Upload</h2>
+        <span class="detail-options">Ready for something new?😈😈😈😈</span>
+        <!-- Input field for video URL -->
+        <div id="gallery-drag">Drag into here!
+        </div>
+    </div>
+
+    <script>
+
+        const { ipcRenderer } = require('electron');
+        const fs = require('fs');
+        const path = require('path');
+
+        const videoDirectory = ipcRenderer.sendSync('call-void-function', 'yourArgument');
+        const gallery = document.getElementById('gallery');
+        const gallery_drag = document.getElementById('gallery-drag');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+
+        function closeWindow() {
+            ipcRenderer.sendSync('close-window');
+        }
+
+
+
+        function loadItem() {
+            fs.readdir(videoDirectory, (err, files) => {
+                if (err) {
+                    console.error('Failed to read directory:', err);
+                    return;
+                }
+
+                const videos = files.filter(file => /\.(mp4|mov|avi|mkv)$/i.test(file)).map(file => ({
+                    title: file.replace(/\.[^/.]+$/, ''),
+                    path: path.join(videoDirectory, file)
+                }));
+
+                gallery.innerHTML = "";
+
+                videos.forEach(video => {
+                    const videoItem = document.createElement('div');
+                    videoItem.className = 'video-item';
+                    videoItem.onclick = () => {
+                        ipcRenderer.send('selected-video', video.path);
+                        localStorage.setItem('videoUrl', video.path);
+                    };
+
+                    const videoElement = document.createElement('video');
+                    videoElement.src = video.path;
+                    videoElement.muted = true; // Allow the video to have sound
+                    videoElement.autoplay = false;
+                    videoElement.loop = false;
+
+                    const title = document.createElement('div');
+                    title.className = 'video-title';
+                    title.innerText = video.title;
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'delete-button';
+                    deleteButton.innerHTML = '<i class="fa-solid fa-xmark"></i>'; // X icon
+                    deleteButton.onclick = (e) => {
+                        e.stopPropagation(); // Prevent click event on video item
+                        deleteVideo(video.path);
+                    };
+
+                    videoItem.appendChild(videoElement);
+                    videoItem.appendChild(title);
+                    videoItem.appendChild(deleteButton);
+                    gallery.appendChild(videoItem);
+                });
+            });
+        }
+
+        function deleteVideo(videoPath) {
+            fs.unlink(videoPath, (err) => {
+                if (err) {
+                    console.error('Failed to delete video:', err);
+                    return;
+                }
+                console.log(`Deleted video: ${videoPath}`);
+                loadItem(); // Reload the gallery after deletion
+            });
+        }
+
+
+        gallery_drag.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            gallery_drag.classList.add('dragover');
+        });
+
+        gallery_drag.addEventListener('dragleave', () => {
+            gallery_drag.classList.remove('dragover');
+        });
+
+        gallery_drag.addEventListener('drop', (e) => {
+            e.preventDefault();
+            gallery_drag.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            for (const file of files) {
+                console.log('Dropped file:', file.name); // Log the dropped file object for debugging
+
+                // Create a directory to save the files
+                const saveDirectory = videoDirectory;
+
+                // Create the directory if it doesn't exist
+                if (!fs.existsSync(saveDirectory)) {
+                    fs.mkdirSync(saveDirectory);
+                }
+
+                // Create a unique filename for the saved file
+                const filename = `${Date.now()}-${file.name}`;
+                const savePath = path.join(saveDirectory, filename);
+
+                // Write the file to the save directory
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const buffer = Buffer.from(reader.result);
+                    fs.writeFileSync(savePath, buffer);
+                    console.log(`File saved to ${savePath}`);
+                    loadItem();
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        });
+
+        function saveCheckboxState() {
+            const checkbox = document.getElementById('iconHider');
+            localStorage.setItem('fullscreenApplication', checkbox.checked);
+        }
+
+        function saveCheckboxState_sound() {
+            const checkbox = document.getElementById('soundWallpepper');
+            localStorage.setItem('soundWallpepper', checkbox.checked);
+        }
+
+        // Function to load the checkbox state from localStorage
+        function loadCheckboxState() {
+            const checkbox = document.getElementById('iconHider');
+            const checkbox2 = document.getElementById('soundWallpepper');
+
+            const savedState = localStorage.getItem('fullscreenApplication');
+            const savedState2 = localStorage.getItem('soundWallpepper');
+
+            const currentVolumn = localStorage.getItem('volumeSetting');
+            if (savedState === 'true') {
+                checkbox.checked = true;
+            }
+
+            if (savedState2 === 'true') {
+                checkbox2.checked = true;
+            }
+
+            if(volumeSlider)
+            {
+                volumeSlider.value = currentVolumn;
+            }
+
+            // Optionally call this function when toggling the sidebar
+            saveCheckboxState(); // Save the initial state
+            saveCheckboxState_sound();
+        }
+
+
+        // Add an event listener to the slider to update volume dynamically and save it
+        volumeSlider.addEventListener('input', (e) => {
+            const newVolume = e.target.value;
+            // Save the new volume to localStorage
+            localStorage.setItem('volumeSetting', newVolume);
+        });
+
+        // Event listener for the checkbox
+        document.getElementById('iconHider').addEventListener('change', saveCheckboxState);
+        document.getElementById('soundWallpepper').addEventListener('change', saveCheckboxState_sound);
+
+        // Load the checkbox state when the page is loaded
+        window.onload = loadCheckboxState;
+
+
+       
+
+        loadItem();
+
+
+    </script>
+</body>
+
+</html>
